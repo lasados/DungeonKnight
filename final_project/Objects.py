@@ -1,6 +1,28 @@
 from abc import ABC, abstractmethod
 import pygame
 import random
+import numpy as np
+
+
+def create_sprite(img, sprite_size):
+    icon = pygame.image.load(img).convert_alpha()
+    icon = pygame.transform.scale(icon, (sprite_size, sprite_size))
+    sprite = pygame.Surface((sprite_size, sprite_size), pygame.HWSURFACE)
+    sprite.blit(icon, (0, 0))
+    return sprite
+
+
+class AbstractObject(ABC):
+
+    @abstractmethod
+    def __init__(self):
+        pass
+
+    def draw(self, display):
+        size = display.game_engine.sprite_size
+        sprite = self.sprite
+        coord = self.position
+        display.blit(sprite, ((coord[0], coord[1])))
 
 
 def create_sprite(img, sprite_size):
@@ -60,6 +82,42 @@ class Hero(Creature):
             self.calc_max_HP()
             self.hp = self.max_hp
 
+
+class Enemy(Creature, Interactive):
+
+    def __init__(self, icon, stats, xp, position):
+        # Init from Creature
+        super().__init__(icon, stats, position)
+        self.exp = xp
+
+    def interact(self, engine, hero):
+        def damage(self, hero):
+            ''' Calulates damage of Enemy.'''
+            hero_stats = hero.stats
+            enemy_stats = self.stats
+            # Calculation factor of hit
+            crit_factor = (1 + random.random() * enemy_stats['luck'] ** 0.5)
+            intl_factor = np.log(1 + enemy_stats['intelligence'] / hero_stats['intelligence'])
+            base_factor = enemy_stats['strength'] * enemy_stats['endurance']
+            armr_factor = hero['strength'] * hero['endurance']
+            damage = crit_factor * intl_factor * base_factor / armr_factor
+            return damage
+
+        def new_exp(self, hero):
+            ''' Calulates exp for kill Enemy.'''
+            return hero.exp + 2 ** (self.exp / hero.exp)
+
+        def score(self, hero):
+            return 0.1 * hero.level * self.exp / hero.exp
+
+        hero.exp = new_exp(self, hero)
+        hero.hp -= damage(self, hero)
+        if hero.hp <= 0.0:
+            engine.notify('Game Over')
+            engine.working = False
+        else:
+            hero.level_up()
+            engine.score += score(self, hero)
 
 class Effect(Hero):
 
@@ -125,5 +183,61 @@ class Effect(Hero):
         pass
 
 
-# FIXME
-# add classes
+class Berserk(Effect):
+    """ Class of positive effect."""
+
+    def apply_effect(self):
+        stats = self.base.stats
+        stats["Strength"] += 3
+        stats["Endurance"] += 3
+        stats["Luck"] += 3
+        stats["Intelligence"] -= 3
+        self.stats = stats
+        self.calc_max_HP()
+        self.hp = self.max_hp
+
+
+class Blessing(Effect):
+    """ Class of positive effect."""
+
+    def apply_effect(self):
+        stats = self.base.stats
+        stats["Strength"] += 1
+        stats["Endurance"] += 1
+        stats["Luck"] += 1
+        stats["Intelligence"] += 1
+        self.stats = stats
+        self.calc_max_HP()
+        self.hp = self.max_hp
+
+
+class Fortunate(Effect):
+    """ Class of positive effect."""
+
+    def apply_effect(self):
+        stats = self.base.stats
+        stats["Luck"] += 5
+        self.stats = stats
+
+
+class Weakness(Effect):
+    """ Class of negative effect."""
+
+    def apply_effect(self):
+        stats = self.base.stats
+        stats["Strength"] -= 1
+        stats["Endurance"] -= 1
+        stats["Luck"] -= 1
+        stats["Intelligence"] -= 1
+        self.stats = stats
+        self.calc_max_HP()
+        self.hp = self.max_hp
+
+
+class Luckless(Effect):
+    """ Class of positive effect."""
+
+    def apply_effect(self):
+        stats = self.base.stats
+        stats["Luck"] -= 2
+        self.stats = stats
