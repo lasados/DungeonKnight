@@ -8,7 +8,6 @@ OBJECT_TEXTURE = os.path.join("texture", "objects")
 ENEMY_TEXTURE = os.path.join("texture", "enemies")
 ALLY_TEXTURE = os.path.join("texture", "ally")
 
-
 def create_sprite(img, sprite_size):
     icon = pygame.image.load(img).convert_alpha()
     icon = pygame.transform.scale(icon, (sprite_size, sprite_size))
@@ -237,6 +236,7 @@ class RandomMap(MapFactory):
 
 
 class SpecialMap(MapFactory):
+    ''' My own map'''
     yaml_tag = "!special_map"
 
     class Map:
