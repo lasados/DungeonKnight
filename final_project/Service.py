@@ -76,10 +76,12 @@ class MapFactory(yaml.YAMLObject):
 
     @classmethod
     def from_yaml(cls, loader, node):
-
-        # FIXME
-        # get _map and _obj
-
+        data = loader.construct_mapping(node)
+        level = cls()
+        if data:
+            level.Objects(data)
+        _map = level.Map()
+        _obj = level.Objects()
         return {'map': _map, 'obj': _obj}
 
 
@@ -110,6 +112,33 @@ class EndMap(MapFactory):
             return self.Map
 
     class Objects:
+        def __init__(self):
+            self.objects = []
+
+        def get_objects(self, _map):
+            return self.objects
+
+
+class EmptyMap(MapFactory):
+    yaml_tag = "!empty_map"
+
+    class Map:
+
+        def __init__(self):
+            self.Map = [[0 for _ in range(41)] for _ in range(41)]
+            for i in range(41):
+                for j in range(41):
+                    if i == 0 or j == 0 or i == 40 or j == 40:
+                        self.Map[j][i] = wall
+                    else:
+                        self.Map[j][i] = [floor1, floor1, floor2, floor3, floor1,
+                                          floor2, floor3, floor1, floor2][random.randint(0, 8)]
+
+        def get_map(self):
+            return self.Map
+
+    class Objects:
+
         def __init__(self):
             self.objects = []
 
@@ -207,8 +236,139 @@ class RandomMap(MapFactory):
             return self.objects
 
 
-# FIXME
-# add classes for YAML !empty_map and !special_map{}
+class SpecialMap(MapFactory):
+    yaml_tag = "!special_map"
+
+    class Map:
+
+        def __init__(self):
+            _map = ['00000000000000000000000000000000000000000',
+                    '0                                  0    0',
+                    '0        0     0000000000000000    0    0',
+                    '000000   0     0      0       0    0    0',
+                    '0        000  00   0000            0    0',
+                    '0        0         0      00000    0    0',
+                    '0   0000000000000000      0   0    0    0',
+                    '0         0        0      0   0         0',
+                    '0         0    0   0000   0   0000000   0',
+                    '0         0    0      0   0             0',
+                    '0         0    0      0   0             0',
+                    '0         0    0      0   0      0   0  0',
+                    '0         0    0      0   0      0   0  0',
+                    '00000000000    000000000000      0   0  0',
+                    '0                         0      0   0  0',
+                    '0                         0      0   0  0',
+                    '0         0      0        0      0   0  0',
+                    '0         0      0000000000      0   0  0',
+                    '0         0               0      0   0  0',
+                    '0         0               0      0   0000',
+                    '0000000   0                             0',
+                    '0         0         000000000000000000000',
+                    '0         0         0                   0',
+                    '0   0000000         0                   0',
+                    '0         0         0                   0',
+                    '0         0         0                   0',
+                    '0         0         0                   0',
+                    '000000    0         000000000000000     0',
+                    '0         0                             0',
+                    '0         0                             0',
+                    '0         0                             0',
+                    '0   0000000                             0',
+                    '0   00000000000000000000000000000       0',
+                    '0            0                  0       0',
+                    '0                               0       0',
+                    '0            0                  0       0',
+                    '0000  00000000                  0       0',
+                    '0          0                    000000000',
+                    '0          0                            0',
+                    '0          0                            0',
+                    '00000000000000000000000000000000000000000'
+                    ]
+
+            for i in range(len(_map[0])):
+                for j in range(len(_map)):
+                    if _map[j][i] == '0':
+                        self.Map[j][i] = wall
+                    else:
+                        self.Map[j][i] = [floor1, floor1, floor2, floor3, floor1,
+                                          floor2, floor3, floor1, floor2][random.randint(0, 8)]
+
+        def get_map(self):
+            return self.Map
+
+    class Objects:
+
+        def __init__(self, config):
+            self.objects = []
+            self.config = config
+
+        def get_objects(self, _map):
+            config = self.config.copy()
+            # Place enemies
+            for enemy_name in config:
+                prop = object_list_prob['enemies'][enemy_name]
+                for _ in range(config[enemy_name]):
+                    coord = (random.randint(1, 39), random.randint(1, 39))
+                    intersect = True
+                    while intersect:
+                        intersect = False
+                        if _map[coord[1]][coord[0]] == wall:
+                            intersect = True
+                            coord = (random.randint(1, 39),
+                                     random.randint(1, 39))
+                            continue
+                        for obj in self.objects:
+                            if coord == obj.position or coord == (1, 1):
+                                intersect = True
+                                coord = (random.randint(1, 39),
+                                         random.randint(1, 39))
+
+                    self.objects.append(Objects.Enemy(
+                        prop['sprite'], prop['action'], coord))
+
+            # Place Allies
+            for obj_name in object_list_prob['ally']:
+                prop = object_list_prob['ally'][obj_name]
+                for i in range(random.randint(prop['min-count'], prop['max-count'])):
+                    coord = (random.randint(1, 39), random.randint(1, 39))
+                    intersect = True
+                    while intersect:
+                        intersect = False
+                        if _map[coord[1]][coord[0]] == wall:
+                            intersect = True
+                            coord = (random.randint(1, 39),
+                                     random.randint(1, 39))
+                            continue
+                        for obj in self.objects:
+                            if coord == obj.position or coord == (1, 1):
+                                intersect = True
+                                coord = (random.randint(1, 39),
+                                         random.randint(1, 39))
+                    self.objects.append(Objects.Ally(
+                        prop['sprite'], prop['action'], coord))
+
+            # Place Chest and Stairs
+            for obj_name in object_list_prob['objects']:
+                prop = object_list_prob['objects'][obj_name]
+                for i in range(random.randint(prop['min-count'], prop['max-count'])):
+                    coord = (random.randint(1, 39), random.randint(1, 39))
+                    intersect = True
+                    while intersect:
+                        intersect = False
+                        if _map[coord[1]][coord[0]] == wall:
+                            intersect = True
+                            coord = (random.randint(1, 39),
+                                     random.randint(1, 39))
+                            continue
+                        for obj in self.objects:
+                            if coord == obj.position or coord == (1, 1):
+                                intersect = True
+                                coord = (random.randint(1, 39),
+                                         random.randint(1, 39))
+                    self.objects.append(Objects.Ally(
+                        prop['sprite'], prop['action'], coord))
+
+            return self.objects
 
 wall = [0]
 floor1 = [0]
