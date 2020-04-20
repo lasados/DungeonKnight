@@ -78,9 +78,10 @@ class MapFactory(yaml.YAMLObject):
         data = loader.construct_mapping(node)
         level = cls()
         if data:
-            level.Objects(data)
+            _obj = level.Objects(data)
+        else:
+            _obj = level.Objects()
         _map = level.Map()
-        _obj = level.Objects()
         return {'map': _map, 'obj': _obj}
 
 
@@ -119,7 +120,7 @@ class EndMap(MapFactory):
 
 
 class EmptyMap(MapFactory):
-    yaml_tag = "!empty_map"
+    yaml_tag = '!empty_map'
 
     class Map:
 
@@ -146,7 +147,7 @@ class EmptyMap(MapFactory):
 
 
 class RandomMap(MapFactory):
-    yaml_tag = "!random_map"
+    yaml_tag = u"!random_map"
 
     class Map:
 
@@ -236,7 +237,7 @@ class RandomMap(MapFactory):
 
 
 class SpecialMap(MapFactory):
-    ''' My own map'''
+    ''' My own map.'''
     yaml_tag = "!special_map"
 
     class Map:
@@ -284,6 +285,8 @@ class SpecialMap(MapFactory):
                     '0          0                            0',
                     '00000000000000000000000000000000000000000'
                     ]
+
+            self.Map = [[0 for _ in range(len(_map[0]))] for _ in range(len(_map))]
 
             for i in range(len(_map[0])):
                 for j in range(len(_map)):
