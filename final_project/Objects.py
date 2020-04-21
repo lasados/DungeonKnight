@@ -22,7 +22,13 @@ class AbstractObject(ABC):
         size = display.game_engine.sprite_size
         sprite = self.sprite
         coord = self.position
-        display.blit(sprite, ((coord[0], coord[1])))
+        x = coord[0]
+        y = coord[1]
+        k = 5
+        min_x = k * (x // k)
+        min_y = k * (y // k)
+
+        display.blit(sprite, ((coord[0] -min_x)* size, (coord[1] - min_y) * size))
 
 
 def create_sprite(img, sprite_size):
@@ -99,13 +105,13 @@ class Enemy(Creature, Interactive):
             crit_factor = (1 + random.random() * enemy_stats['luck'] ** 0.5)
             intl_factor = np.log(1 + enemy_stats['intelligence'] / hero_stats['intelligence'])
             base_factor = enemy_stats['strength'] * enemy_stats['endurance']
-            armr_factor = hero['strength'] * hero['endurance']
+            armr_factor = hero_stats['strength'] * hero_stats['endurance']
             damage = crit_factor * intl_factor * base_factor / armr_factor
             return damage
 
         def new_exp(self, hero):
             ''' Calulates exp for kill Enemy.'''
-            return hero.exp + 2 ** (self.exp / hero.exp)
+            return hero.exp + 2 ** (self.exp / (hero.exp + self.exp))
 
         def score(self, hero):
             return 0.1 * hero.level * self.exp / hero.exp
