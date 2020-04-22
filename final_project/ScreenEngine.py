@@ -9,7 +9,33 @@ colors = {
     "blue": (0, 0, 255, 255),
     "wooden": (153, 92, 0, 255),
 }
+def calculate_left_corner(engine, display):
+    sprite_size = engine.sprite_size
+    hero_position = engine.hero.position
+    x = hero_position[0]
+    y = hero_position[1]
 
+    game_screen_size = display.get_size()
+    width, length = game_screen_size
+
+    shape_x = width // sprite_size
+    shape_y = length // sprite_size
+
+    if shape_x//2 <= x <= 40 - shape_x//2:
+        min_x = x - shape_x//2
+    elif x < shape_x//2:
+        min_x = 0
+    elif x > 40 - shape_x//2:
+        min_x = 40 - shape_x
+
+    if shape_y//2 <= y <= 40 - shape_y//2:
+        min_y = y - shape_y//2
+    elif y < shape_y//2:
+        min_y = 0
+    elif y > 40 - shape_y//2:
+        min_y = 40 - shape_y
+
+    return (min_x, min_y)
 
 class ScreenHandle(pygame.Surface):
 
@@ -48,36 +74,23 @@ class GameSurface(ScreenHandle):
 
     def draw_map(self):
         # FIXME || calculate (min_x,min_y) - left top corner
-        sprite_size = self.game_engine.sprite_size
-        hero_position = self.game_engine.hero.position
-        x = hero_position[0]
-        y = hero_position[1]
+        min_x, min_y = calculate_left_corner(self.game_engine, self)
 
-        game_screen_size = self.get_size()
-        width, length = game_screen_size
-        visible = width // sprite_size
-        k = 5
-        min_x = k * (x // k)
-        min_y = k * (y // k)
-
-    ##
         if self.game_engine.map:
+
+
             for i in range(len(self.game_engine.map[0]) - min_x):
                 for j in range(len(self.game_engine.map) - min_y):
                     self.blit(self.game_engine.map[min_y + j][min_x + i][
                               0], (i * self.game_engine.sprite_size, j * self.game_engine.sprite_size))
+
         else:
             self.fill(colors["white"])
 
     def draw_object(self, sprite, coord):
         size = self.game_engine.sprite_size
     # FIXME || calculate (min_x,min_y) - left top corner
-        hero_position = self.game_engine.hero.position
-        x = hero_position[0]
-        y = hero_position[1]
-        k = 5
-        min_x = k * (x // k)
-        min_y = k * (y // k)
+        min_x, min_y = calculate_left_corner(self.game_engine, self)
 
     ##
         self.blit(sprite, ((coord[0] - min_x) * size,
@@ -86,12 +99,7 @@ class GameSurface(ScreenHandle):
     def draw(self, canvas):
         size = self.game_engine.sprite_size
     # FIXME || calculate (min_x,min_y) - left top corner
-        hero_position = self.game_engine.hero.position
-        x = hero_position[0]
-        y = hero_position[1]
-        k = 5
-        min_x = k * (x // k)
-        min_y = k * (y // k)
+        min_x, min_y = calculate_left_corner(self.game_engine, self)
     ##
         self.draw_map()
         for obj in self.game_engine.objects:
@@ -205,6 +213,7 @@ class InfoWindow(ScreenHandle):
         # FIXME set this class as Observer to engine and send it to next in
         # chain
         self.game_engine = engine
+        engine.subscribe(self)
         self.successor.connect_engine(engine)
 
 class HelpWindow(ScreenHandle):

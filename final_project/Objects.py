@@ -3,6 +3,33 @@ import pygame
 import random
 import numpy as np
 
+def calculate_left_corner(hero, display):
+    sprite_size = display.game_engine.sprite_size
+    hero_position = hero.position
+    x = hero_position[0]
+    y = hero_position[1]
+
+    game_screen_size = display.get_size()
+    width, length = game_screen_size
+
+    shape_x = width // sprite_size
+    shape_y = length // sprite_size
+
+    if shape_x//2 <= x <= 40 - shape_x//2:
+        min_x = x - shape_x//2
+    elif x < shape_x//2:
+        min_x = 0
+    elif x > 40 - shape_x//2:
+        min_x = 40 - shape_x
+
+    if shape_y//2 <= y <= 40 - shape_y//2:
+        min_y = y - shape_y//2
+    elif y < shape_y//2:
+        min_y = 0
+    elif y > 40 - shape_y//2:
+        min_y = 40 - shape_y
+
+    return (min_x, min_y)
 
 def create_sprite(img, sprite_size):
     icon = pygame.image.load(img).convert_alpha()
@@ -19,16 +46,11 @@ class AbstractObject(ABC):
         pass
 
     def draw(self, display):
+        min_x, min_y = calculate_left_corner(self, display)
         size = display.game_engine.sprite_size
         sprite = self.sprite
         coord = self.position
-        x = coord[0]
-        y = coord[1]
-        k = 5
-        min_x = k * (x // k)
-        min_y = k * (y // k)
-
-        display.blit(sprite, ((coord[0] -min_x)* size, (coord[1] - min_y) * size))
+        display.blit(sprite, ((coord[0] - min_x)* size, (coord[1] - min_y) * size))
 
 
 def create_sprite(img, sprite_size):
@@ -111,7 +133,7 @@ class Enemy(Creature, Interactive):
 
         def new_exp(self, hero):
             ''' Calulates exp for kill Enemy.'''
-            return hero.exp + 2 ** (self.exp / (hero.exp + self.exp))
+            return hero.exp + (self.exp // 2)
 
         def score(self, hero):
             return 0.1 * hero.level * self.exp / hero.exp
@@ -188,19 +210,26 @@ class Effect(Hero):
     def apply_effect(self):
         pass
 
+    @abstractmethod
+    def notify_effect(self):
+        pass
+
 
 class Berserk(Effect):
     """ Class of positive effect."""
 
     def apply_effect(self):
         stats = self.base.stats
-        stats["Strength"] += 3
-        stats["Endurance"] += 3
-        stats["Luck"] += 3
-        stats["Intelligence"] -= 3
+        stats["strength"] += 3
+        stats["endurance"] += 3
+        stats["luck"] += 3
+        stats["intelligence"] -= 3
         self.stats = stats
         self.calc_max_HP()
         self.hp = self.max_hp
+
+    def notify_effect(self):
+        return 'Berserk Effect !'
 
 
 class Blessing(Effect):
@@ -208,13 +237,16 @@ class Blessing(Effect):
 
     def apply_effect(self):
         stats = self.base.stats
-        stats["Strength"] += 1
-        stats["Endurance"] += 1
-        stats["Luck"] += 1
-        stats["Intelligence"] += 1
+        stats["strength"] += 1
+        stats["endurance"] += 1
+        stats["luck"] += 1
+        stats["intelligence"] += 1
         self.stats = stats
         self.calc_max_HP()
         self.hp = self.max_hp
+
+    def notify_effect(self):
+        return 'Blessing Effect !'
 
 
 class Fortunate(Effect):
@@ -222,23 +254,27 @@ class Fortunate(Effect):
 
     def apply_effect(self):
         stats = self.base.stats
-        stats["Luck"] += 5
+        stats["luck"] += 5
         self.stats = stats
 
+    def notify_effect(self):
+        return 'Fortunate Effect !'
 
 class Weakness(Effect):
     """ Class of negative effect."""
 
     def apply_effect(self):
         stats = self.base.stats
-        stats["Strength"] -= 1
-        stats["Endurance"] -= 1
-        stats["Luck"] -= 1
-        stats["Intelligence"] -= 1
+        stats["strength"] -= 1
+        stats["endurance"] -= 1
+        stats["luck"] -= 1
+        stats["intelligence"] -= 1
         self.stats = stats
         self.calc_max_HP()
         self.hp = self.max_hp
 
+    def notify_effect(self):
+        return 'Weakness Effect !'
 
 class Luckless(Effect):
     """ Class of positive effect."""
@@ -247,3 +283,6 @@ class Luckless(Effect):
         stats = self.base.stats
         stats["Luck"] -= 2
         self.stats = stats
+
+    def notify_effect(self):
+        return 'Luckless Effect !'

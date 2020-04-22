@@ -68,11 +68,17 @@ while engine.working:
                 if event.key == pygame.K_h:
                     engine.show_help = not engine.show_help
                 if event.key == pygame.K_KP_PLUS:
-                    size = size + 1
-                    create_game(size, False)
+                    if 640 // size > 5:
+                        size = size + 2
+                        create_game(size, False)
+                    else:
+                        engine.notify('Min Size reached')
                 if event.key == pygame.K_KP_MINUS:
-                    size = size - 1
-                    create_game(size, False)
+                    if 640 // size < 30:
+                        size = size - 2
+                        create_game(size, False)
+                    else:
+                        engine.notify('Max Size reached')
                 if event.key == pygame.K_r:
                     create_game(size, True)
                 if event.key == pygame.K_ESCAPE:
