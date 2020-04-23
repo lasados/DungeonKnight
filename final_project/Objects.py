@@ -14,20 +14,20 @@ def calculate_left_corner(hero, display):
 
     shape_x = width // sprite_size
     shape_y = length // sprite_size
-
-    if shape_x//2 <= x <= 40 - shape_x//2:
+    map_size = 41
+    if shape_x//2 <= x <= map_size - shape_x//2:
         min_x = x - shape_x//2
     elif x < shape_x//2:
         min_x = 0
-    elif x > 40 - shape_x//2:
-        min_x = 40 - shape_x
+    elif x > map_size - shape_x//2:
+        min_x = map_size - shape_x
 
-    if shape_y//2 <= y <= 40 - shape_y//2:
+    if shape_y//2 <= y <= map_size - shape_y//2:
         min_y = y - shape_y//2
     elif y < shape_y//2:
         min_y = 0
-    elif y > 40 - shape_y//2:
-        min_y = 40 - shape_y
+    elif y > map_size - shape_y//2:
+        min_y = map_size - shape_y
 
     return (min_x, min_y)
 
@@ -103,12 +103,12 @@ class Hero(Creature):
 
     def level_up(self):
         while self.exp >= 100 * (2 ** (self.level - 1)):
-            yield "level up!"
             self.level += 1
             self.stats["strength"] += 2
             self.stats["endurance"] += 2
             self.calc_max_HP()
             self.hp = self.max_hp
+            return "level up!"
 
 
 class Enemy(Creature, Interactive):
@@ -125,27 +125,32 @@ class Enemy(Creature, Interactive):
             enemy_stats = self.stats
             # Calculation factor of hit
             crit_factor = (1 + random.random() * enemy_stats['luck'] ** 0.5)
-            intl_factor = np.log(1 + enemy_stats['intelligence'] / hero_stats['intelligence'])
+            intl_factor = np.log(1 + enemy_stats['intelligence'] / max(1, hero_stats['intelligence']))
             base_factor = enemy_stats['strength'] * enemy_stats['endurance']
             armr_factor = hero_stats['strength'] * hero_stats['endurance']
-            damage = crit_factor * intl_factor * base_factor / armr_factor
-            return damage
+            damage = crit_factor * intl_factor * base_factor / max(1,armr_factor)
+            return max(1, damage)
 
         def new_exp(self, hero):
             ''' Calulates exp for kill Enemy.'''
             return hero.exp + (self.exp // 2)
 
         def score(self, hero):
-            return 0.1 * hero.level * self.exp / hero.exp
+            return round(10*hero.level*self.exp / max(1,hero.exp), 2)
 
         hero.exp = new_exp(self, hero)
-        hero.hp -= damage(self, hero)
+        hero.hp -= int(damage(self, hero))
         if hero.hp <= 0.0:
             engine.notify('Game Over')
             engine.working = False
+
+        if hero.level_up():
+            engine.notify('Enemy killed!')
+            engine.notify('Level Up!')
         else:
-            hero.level_up()
-            engine.score += score(self, hero)
+            engine.notify('Enemy killed!')
+            engine.notify('Damage recieved {}'.format(int(damage(self, hero))))
+        engine.score += score(self, hero)
 
 class Effect(Hero):
 

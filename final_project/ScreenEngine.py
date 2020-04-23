@@ -20,20 +20,20 @@ def calculate_left_corner(engine, display):
 
     shape_x = width // sprite_size
     shape_y = length // sprite_size
-
-    if shape_x//2 <= x <= 40 - shape_x//2:
+    map_size = 41
+    if shape_x//2 <= x <= map_size - shape_x//2:
         min_x = x - shape_x//2
     elif x < shape_x//2:
         min_x = 0
-    elif x > 40 - shape_x//2:
-        min_x = 40 - shape_x
+    elif x > map_size - shape_x//2:
+        min_x = map_size - shape_x
 
-    if shape_y//2 <= y <= 40 - shape_y//2:
+    if shape_y//2 <= y <= map_size - shape_y//2:
         min_y = y - shape_y//2
     elif y < shape_y//2:
         min_y = 0
-    elif y > 40 - shape_y//2:
-        min_y = 40 - shape_y
+    elif y > map_size - shape_y//2:
+        min_y = map_size - shape_y
 
     return (min_x, min_y)
 
