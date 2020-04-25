@@ -3,9 +3,23 @@
   <component name="ChangeListManager">
     <list default="true" id="22f92dc3-62ca-40d0-a292-d58699033bc0" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects.py" beforeDir="false" afterPath="$PROJECT_DIR$/Objects.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ScreenEngine.py" beforeDir="false" afterPath="$PROJECT_DIR$/ScreenEngine.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Service.py" beforeDir="false" afterPath="$PROJECT_DIR$/Service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels.yml" beforeDir="false" afterPath="$PROJECT_DIR$/levels.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects.yml" beforeDir="false" afterPath="$PROJECT_DIR$/objects.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/Ground_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/texture/Ground_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/Ground_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/texture/Ground_2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/Ground_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/texture/Ground_3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/Hero.png" beforeDir="false" afterPath="$PROJECT_DIR$/texture/Hero.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/ally/NPC_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/texture/ally/NPC_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/ally/NPC_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/texture/ally/NPC_2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/ally/NPC_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/texture/ally/NPC_3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/enemies/Enemy_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/enemies/Naga.png" beforeDir="false" afterPath="$PROJECT_DIR$/texture/enemies/Naga.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/enemies/dragon.png" beforeDir="false" afterPath="$PROJECT_DIR$/texture/enemies/dragon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/enemies/rat.png" beforeDir="false" afterPath="$PROJECT_DIR$/texture/enemies/rat.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/objects/chest.png" beforeDir="false" afterPath="$PROJECT_DIR$/texture/objects/chest.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/objects/stair.png" beforeDir="false" afterPath="$PROJECT_DIR$/texture/objects/stair.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texture/wall.png" beforeDir="false" afterPath="$PROJECT_DIR$/texture/wall.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -2,11 +2,19 @@ levels:
   - !empty_map {}
   - !special_map
     rat: 5
+    wolf: 3
+    witch: 1
   - !special_map
     rat: 10
+    wolf: 7
     knight: 5
+    witch: 3
+    axe: 1
   - !special_map
     rat: 10
+    wolf: 10
     knight: 10
+    witch: 5
+    axe: 3
     dragon: 1
   - !random_map {}

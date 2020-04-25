@@ -33,13 +33,27 @@ enemies:
     intelligence: 2
     luck: 1
     experience: 50
+  wolf:
+    sprite: [wolf.png]
+    strength: 10
+    endurance: 10
+    intelligence: 10
+    luck: 5
+    experience: 100
   knight:
-    sprite: [Enemy_1.png]
+    sprite: [knight.png]
     strength: 15
     endurance: 15
     intelligence: 15
     luck: 10
     experience: 200
+  axe:
+    sprite: [axe.png]
+    strength: 45
+    endurance: 45
+    intelligence: 15
+    luck: 10
+    experience: 500
   naga:
     sprite: [Naga.png]
     strength: 25
@@ -47,6 +61,13 @@ enemies:
     intelligence: 25
     luck: 10
     experience: 500
+  witch:
+    sprite: [witch.png]
+    strength: 35
+    endurance: 35
+    intelligence: 35
+    luck: 10
+    experience: 700
   dragon:
     sprite: [dragon.png]
     strength: 50

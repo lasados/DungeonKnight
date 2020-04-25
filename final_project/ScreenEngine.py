@@ -113,6 +113,11 @@ class GameSurface(ScreenHandle):
             self.successor.draw(canvas)
 
 
+class MiniMap(ScreenHandle):
+    pass
+
+
+
 class ProgressBar(ScreenHandle):
 
     def __init__(self, *args, **kwargs):
