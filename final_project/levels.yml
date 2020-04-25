@@ -4,12 +4,13 @@ levels:
     rat: 5
     wolf: 3
     witch: 1
+    axe: 1
   - !special_map
     rat: 10
     wolf: 7
     knight: 5
     witch: 3
-    axe: 1
+    axe: 3
   - !special_map
     rat: 10
     wolf: 10

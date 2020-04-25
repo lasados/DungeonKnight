@@ -25,11 +25,13 @@ base_stats = {
 }
 
 
-def create_game(sprite_size, is_new):
+def create_game(sprite_size, is_new, hero_sprite_name=None):
+    if hero_sprite_name==None:
+        hero_sprite_name = 'Hero_right.png'
     global hero, engine, drawer, iteration
     if is_new:
         hero = Objects.Hero(base_stats, Service.create_sprite(
-            os.path.join("texture", "Hero.png"), sprite_size))
+            os.path.join("texture", 'Hero_right.png'), sprite_size))
         engine = Logic.GameEngine()
         Service.service_init(sprite_size)
         Service.reload_game(engine, hero)
@@ -45,7 +47,7 @@ def create_game(sprite_size, is_new):
     else:
         engine.sprite_size = sprite_size
         hero.sprite = Service.create_sprite(
-            os.path.join("texture", "Hero.png"), sprite_size)
+            os.path.join("texture", hero_sprite_name), sprite_size)
         Service.service_init(sprite_size, False)
 
     Logic.GameEngine.sprite_size = sprite_size
@@ -93,9 +95,11 @@ while engine.working:
                     elif event.key == pygame.K_LEFT:
                         engine.move_left()
                         iteration += 1
+                        create_game(size, False, 'Hero_left.png')
                     elif event.key == pygame.K_RIGHT:
                         engine.move_right()
                         iteration += 1
+                        create_game(size, False, 'Hero_right.png')
                 else:
                     if event.key == pygame.K_RETURN:
                         create_game()
