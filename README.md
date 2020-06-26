@@ -22,8 +22,8 @@ python main.py
 Play!
 
 ## ScreenShots
-![Screenshot](game/screenshots/screenshot1.png)
-![Screenshot](game/screenshots/screenshot2.png)
+![Screenshot](https://github.com/lasados/Games-Dungeon-Knight/blob/master/game/screenshots/screenshot1.PNG?raw=true)
+![Screenshot](https://github.com/lasados/Games-Dungeon-Knight/blob/master/game/screenshots/screenshot2.PNG?raw=true)
 
 
 
