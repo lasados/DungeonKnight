@@ -1,0 +1,3 @@
+PyYaml==3.13
+PyGame==1.9.6
+numpy==1.18.3
