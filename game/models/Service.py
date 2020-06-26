@@ -1,12 +1,14 @@
+import os
 import pygame
 import random
 import yaml
-import os
-import Objects
+
+from models import Objects
 
 OBJECT_TEXTURE = os.path.join("texture", "objects")
 ENEMY_TEXTURE = os.path.join("texture", "enemies")
 ALLY_TEXTURE = os.path.join("texture", "ally")
+
 
 def create_sprite(img, sprite_size):
     icon = pygame.image.load(img).convert_alpha()
@@ -441,7 +443,7 @@ def service_init(sprite_size, full=True):
     floor2[0] = create_sprite(os.path.join("texture", "Ground_2.png"), sprite_size)
     floor3[0] = create_sprite(os.path.join("texture", "Ground_3.png"), sprite_size)
 
-    file = open("objects.yml", "r")
+    file = open("yaml_objects/objects.yml", "r")
 
     object_list_tmp = yaml.load(file.read())
     if full:
@@ -476,7 +478,7 @@ def service_init(sprite_size, full=True):
     file.close()
 
     if full:
-        file = open("levels.yml", "r")
+        file = open("yaml_objects/levels.yml", "r")
         level_list = yaml.load(file.read())['levels']
         level_list.append({'map': EndMap.Map(), 'obj': EndMap.Objects()})
         file.close()

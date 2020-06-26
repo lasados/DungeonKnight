@@ -3,6 +3,7 @@ import pygame
 import random
 import numpy as np
 
+
 def calculate_left_corner(hero, display):
     sprite_size = display.game_engine.sprite_size
     hero_position = hero.position
@@ -30,6 +31,7 @@ def calculate_left_corner(hero, display):
         min_y = map_size - shape_y
 
     return (min_x, min_y)
+
 
 def create_sprite(img, sprite_size):
     icon = pygame.image.load(img).convert_alpha()
@@ -265,6 +267,7 @@ class Fortunate(Effect):
     def notify_effect(self):
         return 'Fortunate Effect !'
 
+
 class Weakness(Effect):
     """ Class of negative effect."""
 
@@ -280,6 +283,7 @@ class Weakness(Effect):
 
     def notify_effect(self):
         return 'Weakness Effect !'
+
 
 class Luckless(Effect):
     """ Class of positive effect."""

@@ -9,6 +9,8 @@ colors = {
     "blue": (0, 0, 255, 255),
     "wooden": (153, 92, 0, 255),
 }
+
+
 def calculate_left_corner(engine, display):
     sprite_size = engine.sprite_size
     hero_position = engine.hero.position
@@ -37,6 +39,7 @@ def calculate_left_corner(engine, display):
 
     return (min_x, min_y)
 
+
 class ScreenHandle(pygame.Surface):
 
     def __init__(self, *args, **kwargs):
@@ -50,16 +53,15 @@ class ScreenHandle(pygame.Surface):
         super().__init__(*args, **kwargs)
         self.fill(colors["wooden"])
 
-
     def draw(self, canvas):
 
         if self.successor is not None:
             canvas.blit(self.successor, self.next_coord)
             self.successor.draw(canvas)
 
-    # FIXME connect_engine
     def connect_engine(self, engine):
         self.game_engine = engine
+
 
 class GameSurface(ScreenHandle):
 
@@ -73,12 +75,9 @@ class GameSurface(ScreenHandle):
         self.game_engine.hero.draw(self)
 
     def draw_map(self):
-        # FIXME || calculate (min_x,min_y) - left top corner
         min_x, min_y = calculate_left_corner(self.game_engine, self)
 
         if self.game_engine.map:
-
-
             for i in range(len(self.game_engine.map[0]) - min_x):
                 for j in range(len(self.game_engine.map) - min_y):
                     self.blit(self.game_engine.map[min_y + j][min_x + i][
@@ -89,18 +88,15 @@ class GameSurface(ScreenHandle):
 
     def draw_object(self, sprite, coord):
         size = self.game_engine.sprite_size
-    # FIXME || calculate (min_x,min_y) - left top corner
         min_x, min_y = calculate_left_corner(self.game_engine, self)
 
-    ##
         self.blit(sprite, ((coord[0] - min_x) * size,
                            (coord[1] - min_y) * size))
 
     def draw(self, canvas):
         size = self.game_engine.sprite_size
-    # FIXME || calculate (min_x,min_y) - left top corner
         min_x, min_y = calculate_left_corner(self.game_engine, self)
-    ##
+
         self.draw_map()
         for obj in self.game_engine.objects:
             self.blit(obj.sprite[0], ((obj.position[0] - min_x) * self.game_engine.sprite_size,
@@ -113,11 +109,6 @@ class GameSurface(ScreenHandle):
             self.successor.draw(canvas)
 
 
-class MiniMap(ScreenHandle):
-    pass
-
-
-
 class ProgressBar(ScreenHandle):
 
     def __init__(self, *args, **kwargs):
@@ -125,8 +116,6 @@ class ProgressBar(ScreenHandle):
         self.fill(colors["wooden"])
 
     def connect_engine(self, engine):
-        # FIXME save engine and send it to next in chain
-        # Done
         self.engine = engine
         self.successor.connect_engine(engine)
 
@@ -208,18 +197,17 @@ class InfoWindow(ScreenHandle):
             self.blit(font.render(text, True, colors["black"]),
                       (5, 20 + 18 * i))
 
-    # FIXME
     # draw next surface in chain
         if self.successor is not None:
             canvas.blit(self.successor, self.next_coord)
             self.successor.draw(canvas)
 
     def connect_engine(self, engine):
-        # FIXME set this class as Observer to engine and send it to next in
         # chain
         self.game_engine = engine
         engine.subscribe(self)
         self.successor.connect_engine(engine)
+
 
 class HelpWindow(ScreenHandle):
 
@@ -236,10 +224,8 @@ class HelpWindow(ScreenHandle):
         self.data.append(["Num+", "Zoom +"])
         self.data.append(["Num-", "Zoom -"])
         self.data.append([" R ", "Restart Game"])
-    # FIXME You can add some help information
 
     def connect_engine(self, engine):
-        # FIXME save engine and send it to next in chain
         self.game_engine = engine
         self.successor.connect_engine(engine)
 
@@ -259,7 +245,7 @@ class HelpWindow(ScreenHandle):
                           (50, 50 + 30 * i))
                 self.blit(font2.render(text[1], True, ((128, 128, 255))),
                           (150, 50 + 30 * i))
-    # FIXME
+
     # draw next surface in chain
         if self.successor is not None:
             canvas.blit(self.successor, self.next_coord)

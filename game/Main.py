@@ -1,10 +1,7 @@
 import pygame
 import os
-import Objects
-import ScreenEngine as SE
-import Logic
-import Service
 
+from models import ScreenEngine as SE, Logic, Service, Objects
 
 SCREEN_DIM = (800, 600)
 
@@ -26,7 +23,7 @@ base_stats = {
 
 
 def create_game(sprite_size, is_new, hero_sprite_name=None):
-    if hero_sprite_name==None:
+    if hero_sprite_name is None:
         hero_sprite_name = 'Hero_right.png'
     global hero, engine, drawer, iteration
     if is_new:
@@ -47,7 +44,8 @@ def create_game(sprite_size, is_new, hero_sprite_name=None):
     else:
         engine.sprite_size = sprite_size
         hero.sprite = Service.create_sprite(
-            os.path.join("texture", hero_sprite_name), sprite_size)
+            os.path.join("texture", hero_sprite_name), sprite_size
+        )
         Service.service_init(sprite_size, False)
 
     Logic.GameEngine.sprite_size = sprite_size
